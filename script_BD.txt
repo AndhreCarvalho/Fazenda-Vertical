@@ -1,0 +1,89 @@
+	// Criação do Banco de Dados
+
+>> mysql.exe -uroot -p147852
+
+use projeto;
+
+
+
+	// Criação das Tabelas
+
+create table estufa(
+	IDESTUFA int(11) primary key auto_increment not null, 
+	estado varchar(2) not null,
+	cidade varchar(30) not null,
+	bairro varchar(30) not null,
+	rua varchar(30) not null,
+	numero int(5) not null,
+	complemento varchar(30) 
+);
+
+create table usuario(
+	nome varchar(30) not null,
+	email varchar(50) not null,
+	cpf double primary key not null,
+	senha varchar(30) not null
+);
+
+create table vegetal(
+	nome_vegetal varchar(30) primary key not null,
+	temperatura_minima int(4) not null,
+	temperatura_maxima int(4) not null,
+	luminosidade_minima int(4) not null,
+	luminosidade_maxima int(4) not null
+);
+
+create table gerencia(
+	IDESTUFA int(11) not null,
+	data date not null,
+	cpf double not null
+);
+
+create table controla(
+	IDESTUFA int(11) not null,
+	nome_vegetal varchar(30) not null,
+	tempo time,
+	tempatural int(4),
+	lumatual int(4)
+);
+
+
+	// População das Tabelas
+
+insert into estufa(estado,cidade,bairro,rua,numero,complemento) values('PB','Joao pessoa','miramar','epitacio pessoa','300','ap 202');
+insert into estufa(estado,cidade,bairro,rua,numero) values('PB','campina grande','universitario','aprigio veloso','500');
+insert into estufa(estado,cidade,bairro,rua,numero) values('PB','campina grande','bodocongo','antonio joaquim pequeno','550');
+
+insert into usuario values('maria','maria@hotmail.com','25894657325','12345678');
+insert into usuario values('joao','joao@hotmail.com','34855976855','abcdefgh');
+insert into usuario values('alice','alice@ig.com','89864879568','12345678');
+
+insert into vegetal values('alface','20','40','60','180');
+insert into vegetal values('rucula','25','45','70','190');
+
+insert into gerencia values('1','21-12-20','25894657325');
+insert into gerencia values('2','20-09-19','34855976855');
+insert into gerencia values('3','19-12-04','89864879568');
+
+insert into controla values('1','alface','01:01:01','38','100');
+insert into controla values('2','rucula','01:10:50','39','99');
+insert into controla values('3','alface','02:56:20','38','100');
+
+
+
+	// Consultas
+
+	// Quais usuários tem sistemas de controle de estufa em campina grande?
+
+select nome,cidade from estufa natural join gerencia natural join usuario where estufa.cidade ='campina grande';
+	
+
+	// Quais sistemas de estufa tem como vegetal alface?
+	
+select IDESTUFA,nome_vegetal from estufa natural join controla natural join vegetal where vegetal.nome_vegetal = 'alface';
+
+
+
+	// Qual vegetal com a maior temperatura_maxima?
+	
+select nome_vegetal, temperatura_maxima from vegetal where temperatura_maxima = (select max(temperatura_maxima) from vegetal);
